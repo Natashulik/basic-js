@@ -14,26 +14,46 @@ const { NotImplementedError } = require('../extensions/index.js');
  * 
  */
 function transform(arr) {
-  //throw new NotImplementedError('Not implemented');
-  let command = arr.find(item => String(item).startsWith('--'));
-switch(command){
-case '--discard-next':
-arr.splice(arr.indexOf('--discard-next'), 2);
-break;
-case '--discard-prev':
-arr.splice(arr.indexOf('--discard-prev')-1, 2);
-break;
-case '--double-next':
-arr.splice(arr.indexOf('--double-next'), 1, arr[arr.indexOf('--double-next')+1] );
-break;
-case '--double-prev':
-arr.splice(arr.indexOf('--double-prev'), 1, arr[arr.indexOf('--double-prev')-1] );
-break;
-} return arr;
+  console.debug(arr)
+     if(!Array.isArray(arr)) throw new Error("'arr' parameter must be an instance of the Array!");
+     let arr2 = [...arr];
+ 
+   if(arr2.indexOf('--double-prev')-2 == arr2.indexOf('--discard-next')) {
+     arr2.splice(arr2.indexOf('--double-prev'), 1);
+   }
+   if(arr2.indexOf('--discard-prev')-2 == arr2.indexOf('--discard-next')) {
+    arr2.splice(arr2.indexOf('--discard-prev'), 1);
+   }
 
-    
-}
-
+   let command = arr2.filter(item => String(item).startsWith('--'));
+   console.log(command)
+   for(let elem of command) {
+     switch(elem){
+       case '--discard-next':
+         if(arr2[arr2.indexOf('--discard-next')+1] !=0 && arr2[arr2.indexOf('--discard-next')+1] != undefined) {
+           arr2.splice(arr2.indexOf('--discard-next'), 2);
+         } else arr2.splice(arr2.indexOf('--discard-next'), 1);
+       break;
+       case '--double-next':
+         if(arr2[arr2.indexOf('--double-next')+1] !=0 && arr2[arr2.indexOf('--double-next')+1] != undefined) {
+           arr2.splice(arr2.indexOf('--double-next'), 1, arr2[arr2.indexOf('--double-next')+1] );
+         } else arr2.splice(arr2.indexOf('--double-next'), 1 );
+       
+       break;
+       case '--discard-prev':
+         if(arr2[arr2.indexOf('--discard-prev')-1] !=0 && arr2[arr2.indexOf('--discard-prev')-1] !=undefined ) {
+           arr2.splice(arr2.indexOf('--discard-prev')-1, 2);
+         } else arr2.splice(arr2.indexOf('--discard-prev'), 1);
+       break;
+       case '--double-prev':
+         if(arr2[arr2.indexOf('--double-prev')-1] !=0 && arr2[arr2.indexOf('--double-prev')-1] !=undefined) {
+           arr2.splice(arr2.indexOf('--double-prev'), 1, arr2[arr2.indexOf('--double-prev')-1] );
+         } else arr2.splice(arr2.indexOf('--double-prev'), 1 );
+       break;
+       }
+   }
+    return arr2;
+   }
 module.exports = {
   transform
 };
